@@ -1,0 +1,685 @@
+{
+  "swagger": "2.0",
+  "paths": {
+    "/api/users/{id}": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Delete a user",
+        "responses": {
+          "404": {
+            "description": "User not found"
+          },
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/delete_user"
+            },
+            "description": "User deleted"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "ApiWeb.UserController.delete_user",
+        "description": "Deletes a user by ID"
+      }
+    },
+    "/api/users": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Add a new user",
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          },
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/create_user"
+            },
+            "description": "Created"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/definitions/create_user"
+            },
+            "required": true,
+            "name": "user",
+            "in": "body",
+            "description": "User details"
+          }
+        ],
+        "operationId": "ApiWeb.UserController.signup",
+        "description": "Adds a new user in the database",
+        "consumes": [
+          "application/json"
+        ]
+      },
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "List all users",
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          },
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/user"
+            },
+            "description": "Success"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "ApiWeb.UserController.getusers",
+        "description": "Fetches all users from the database"
+      }
+    },
+    "/api/user/{name}": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Filter by user name",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Error filtering user"
+          },
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/getUserByName"
+            },
+            "description": "Filter user by name"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/definitions/getUserByName"
+            },
+            "required": true,
+            "name": "user",
+            "in": "body",
+            "description": "Filter user by name"
+          }
+        ],
+        "operationId": "ApiWeb.UserController.get_user_by_name",
+        "description": "Filter users by name",
+        "consumes": [
+          "application/json"
+        ]
+      }
+    },
+    "/api/user": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Updates a user",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "User not found"
+          },
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/update_profile"
+            },
+            "description": "User profile updated successfully"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/definitions/update_profile"
+            },
+            "required": true,
+            "name": "user",
+            "in": "body",
+            "description": "User details"
+          }
+        ],
+        "operationId": "ApiWeb.UserController.update_profile",
+        "description": "A user can update his/her profile",
+        "consumes": [
+          "application/json"
+        ]
+      }
+    },
+    "/api/update/": {
+      "patch": {
+        "tags": [
+          "Feedback"
+        ],
+        "summary": "Updates a feedback",
+        "responses": {
+          "500": {
+            "description": "Internal server error"
+          },
+          "400": {
+            "description": "Error updating feedback"
+          },
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/update_feedback"
+            },
+            "description": "Feedback updated successfully"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/definitions/update_feedback"
+            },
+            "required": true,
+            "name": "data",
+            "in": "body",
+            "description": "Feedback Updated Successfully"
+          }
+        ],
+        "operationId": "ApiWeb.FeedbackController.update_feedback",
+        "description": "Update a feedback by given id",
+        "consumes": [
+          "application/json"
+        ]
+      }
+    },
+    "/api/submit": {
+      "post": {
+        "tags": [
+          "Feedback"
+        ],
+        "summary": "Submit Feedback",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Error submitting feedback"
+          },
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/feedbackSubmit"
+            },
+            "description": "User feedback submitted successfully"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/definitions/feedbackSubmit"
+            },
+            "required": true,
+            "name": "feedback",
+            "in": "body",
+            "description": "User feedback for submission"
+          }
+        ],
+        "operationId": "ApiWeb.FeedbackController.feedback_submit",
+        "description": "A user can submit feedback",
+        "consumes": [
+          "application/json"
+        ]
+      }
+    },
+    "/api/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Logs in a user",
+        "responses": {
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/login_response"
+            },
+            "description": "User logged in successfully"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/definitions/login"
+            },
+            "required": true,
+            "name": "user",
+            "in": "body",
+            "description": "User login credentials"
+          }
+        ],
+        "operationId": "ApiWeb.UserController.login",
+        "description": "Logs in a user in the database"
+      }
+    },
+    "/api/feedbacks": {
+      "get": {
+        "tags": [
+          "Feedback"
+        ],
+        "summary": "View All feedbacks",
+        "responses": {
+          "500": {
+            "description": "Internal server error"
+          },
+          "400": {
+            "description": "Error fetching feedbacks"
+          },
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/view_feedbacks"
+            },
+            "description": "User feedbacks fetched successfully"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "required": false,
+            "name": "email",
+            "in": "query",
+            "description": "Filter feedbacks by this email"
+          },
+          {
+            "type": "string",
+            "required": false,
+            "name": "from",
+            "in": "query",
+            "description": "Filter feedbacks from this date (YYYY-MM-DD)"
+          },
+          {
+            "type": "string",
+            "required": false,
+            "name": "to",
+            "in": "query",
+            "description": "Filter feedbacks  till this date (YYYY-MM-DD)"
+          },
+          {
+            "type": "string",
+            "required": false,
+            "name": "order",
+            "in": "query",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "description": "Order feedbacks by ASC or DESC"
+          }
+        ],
+        "operationId": "ApiWeb.FeedbackController.get_feedbacks",
+        "description": "All feedbacks can be viewed "
+      }
+    },
+    "/api/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Feedback"
+        ],
+        "summary": "Deletes a feedback ",
+        "responses": {
+          "500": {
+            "description": "Internal Server error"
+          },
+          "400": {
+            "description": "Error deleting feedback"
+          },
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/delete_feedback"
+            },
+            "description": " Feedback Deleted successfully"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/definitions/delete_feedback"
+            },
+            "required": true,
+            "name": "id",
+            "in": "body",
+            "description": "Feedback deleted successfully"
+          }
+        ],
+        "operationId": "ApiWeb.FeedbackController.delete_feedback",
+        "description": "Deletes a feedback with given id",
+        "consumes": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "info": {
+    "version": "0.0.1",
+    "title": "Inquora"
+  },
+  "host": "localhost:4000",
+  "definitions": {
+    "view_feedbacks": {
+      "type": "object",
+      "title": " View All Feedback OR filter on basis of date ",
+      "required": [
+        "feedback",
+        "email",
+        "name"
+      ],
+      "properties": {
+        "to": {
+          "type": "string",
+          "description": "to"
+        },
+        "name": {
+          "type": "string",
+          "description": " Name"
+        },
+        "from": {
+          "type": "string",
+          "description": "from"
+        },
+        "feedback": {
+          "type": "string",
+          "description": "feedback"
+        },
+        "email": {
+          "type": "string",
+          "description": "email"
+        }
+      },
+      "example": {
+        "name": "Tester 1",
+        "inserted_at": "2025-08-07",
+        "feedback": "This is the feedback",
+        "email": "tester@gmail.com"
+      },
+      "description": "Schema for viewing feedbacks"
+    },
+    "user": {
+      "type": "object",
+      "title": "User",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "First name"
+        },
+        "id": {
+          "type": "integer",
+          "description": "ID"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email"
+        }
+      },
+      "example": {
+        "name": "John Doe",
+        "id": 1,
+        "email": "john@example.com"
+      },
+      "description": "A user record"
+    },
+    "update_profile": {
+      "type": "object",
+      "title": "Update Profile",
+      "required": [
+        "email",
+        "name",
+        "id"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": " Name"
+        },
+        "id": {
+          "type": "integer",
+          "description": "Id"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email"
+        }
+      },
+      "example": {
+        "password": "Tester123@",
+        "name": "tester",
+        "id": "12",
+        "email": "tester@gmail.com"
+      }
+    },
+    "update_feedback": {
+      "type": "object",
+      "title": "Updates a feedback ",
+      "required": [
+        "feedback",
+        "email",
+        "lname",
+        "fname",
+        "id"
+      ],
+      "properties": {
+        "lname": {
+          "type": "string",
+          "description": "Last Name"
+        },
+        "id": {
+          "type": "string",
+          "description": "Id"
+        },
+        "fname": {
+          "type": "string",
+          "description": "First Name"
+        },
+        "feedback": {
+          "type": "string",
+          "description": "feedback"
+        },
+        "email": {
+          "type": "string",
+          "description": "email"
+        }
+      },
+      "example": {
+        "lname": "1",
+        "id": "12",
+        "fname": "Tester",
+        "feedback": "This is the feedback",
+        "email": "tester@gmail.com"
+      },
+      "description": "Schema for updating a feedback"
+    },
+    "login_response": {
+      "type": "object",
+      "title": "Login Response",
+      "properties": {
+        "user": {
+          "type": "map",
+          "description": "User info"
+        }
+      }
+    },
+    "login": {
+      "type": "object",
+      "title": "Log in user",
+      "required": [
+        "password",
+        "email"
+      ],
+      "properties": {
+        "password": {
+          "type": "string",
+          "description": "Password"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email"
+        }
+      },
+      "example": {
+        "password": "newpassword123@",
+        "email": "new@example.com"
+      },
+      "description": "Schema to log in  a new user"
+    },
+    "getUserByName": {
+      "type": "object",
+      "title": "Filter user by name",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name"
+        }
+      },
+      "example": {
+        "Name": "Tester"
+      }
+    },
+    "feedbackSubmit": {
+      "type": "object",
+      "title": "Feedback Submission",
+      "required": [
+        "feedback",
+        "email",
+        "lname",
+        "fname"
+      ],
+      "properties": {
+        "lname": {
+          "type": "string",
+          "description": "lname"
+        },
+        "fname": {
+          "type": "string",
+          "description": "fname"
+        },
+        "feedback": {
+          "type": "string",
+          "description": "feedback"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "email"
+        }
+      },
+      "example": {
+        "lname": "tester",
+        "fname": "tester",
+        "feedback": "This is the feedback",
+        "email": "tester@gmail.com"
+      },
+      "description": "Schema of feedback submission by user"
+    },
+    "delete_user": {
+      "type": "object",
+      "title": "Delete User",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "id"
+        }
+      },
+      "example": {
+        "id": 3
+      },
+      "description": "A user"
+    },
+    "delete_feedback": {
+      "type": "object",
+      "title": "Delete a feedback",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Id"
+        }
+      },
+      "example": {
+        "id": "02"
+      },
+      "description": "Schema for deleting a feedback by id"
+    },
+    "create_user": {
+      "type": "object",
+      "title": "Create User",
+      "required": [
+        "password",
+        "name",
+        "email"
+      ],
+      "properties": {
+        "password": {
+          "type": "string",
+          "description": "Password"
+        },
+        "name": {
+          "type": "string",
+          "description": "First name"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email"
+        }
+      },
+      "example": {
+        "password": "newpassword123@",
+        "name": "New User",
+        "email": "new@example.com"
+      },
+      "description": "Schema for creating a new user"
+    }
+  }
+}
