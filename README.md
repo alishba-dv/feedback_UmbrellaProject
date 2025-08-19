@@ -6,11 +6,18 @@
 Elixir umbrella project with Phoenix APIs and Ecto for feedback collection, storage and management and Swagger UI.
   Umbrella Project concept is used for implementation of this project and there are following child apps inside project
   Here is the directory structure for reference:::
+
+  
 feedback_umbrella/
+
 ├── apps/
+
 │   ├── api/   
+
 │   ├── data/ 
+
 ├── config/
+
 └── mix.exs
 
 
