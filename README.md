@@ -39,27 +39,27 @@ Admin dashboard
 Phoenix for building APIs
 
 Ecto for handling Database with Postgres
-
-# 1️⃣ Clone the repo
+```
+# 1 Clone the repo
 git clone https://github.com/yourusername/feedback_umbrella.git
 cd feedback_umbrella
 
-# 2️⃣ Fetch dependencies for all apps
+# 2️Fetch dependencies for all apps
 mix deps.get
 
-# 3️⃣ Setup the database (PostgreSQL)
+# 3 Setup the database (PostgreSQL)
 mix ecto.create        # create DB
 mix ecto.migrate       # run migrations
 mix run priv/repo/seeds.exs   # optional: seed DB
 
-# 4️⃣ Start Phoenix server for API app
+# 4 Start Phoenix server for API app
 cd apps/api
 mix phx.server
 
 # The API will run at: http://localhost:4000
 # Swagger docs available at: http://localhost:4000/api/docs
 
-# 5️⃣ Example cURL requests
+# 5️ Example cURL requests
 # Fetch all feedbacks
 curl -X GET "http://localhost:4000/api/feedbacks" -H "accept: application/json"
 
@@ -82,7 +82,7 @@ http://localhost:4000/api/docs
 
 Here is homepage to get an idea about implementation of APIs in swagger 
 
-
+```
 
 ## Learn more
 
