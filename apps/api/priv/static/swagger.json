@@ -289,24 +289,24 @@
         "description": "Logs in a user in the database"
       }
     },
-    "/api/feedbacks": {
-      "get": {
+    "/api/feedback": {
+      "post": {
         "tags": [
           "Feedback"
         ],
-        "summary": "View All feedbacks",
+        "summary": "Submit a feedback along with a file url for upload",
         "responses": {
           "500": {
-            "description": "Internal server error"
+            "description": "Internal Server Error\n"
           },
           "400": {
-            "description": "Error fetching feedbacks"
+            "description": "Error submitting feedback"
           },
           "200": {
             "schema": {
-              "$ref": "#/definitions/view_feedbacks"
+              "$ref": "#/definitions/filefeedbacksubmit"
             },
-            "description": "User feedbacks fetched successfully"
+            "description": "user Feedback Sbmitted successfully"
           }
         },
         "produces": [
@@ -315,39 +315,38 @@
         "parameters": [
           {
             "type": "string",
-            "required": false,
+            "required": true,
+            "name": "name",
+            "in": "formData",
+            "description": "Name"
+          },
+          {
+            "type": "string",
+            "required": true,
             "name": "email",
-            "in": "query",
-            "description": "Filter feedbacks by this email"
+            "in": "formData",
+            "description": "Email"
           },
           {
             "type": "string",
-            "required": false,
-            "name": "from",
-            "in": "query",
-            "description": "Filter feedbacks from this date (YYYY-MM-DD)"
+            "required": true,
+            "name": "feedback",
+            "in": "formData",
+            "description": "Feedback"
           },
           {
-            "type": "string",
+            "type": "file",
             "required": false,
-            "name": "to",
-            "in": "query",
-            "description": "Filter feedbacks  till this date (YYYY-MM-DD)"
-          },
-          {
-            "type": "string",
-            "required": false,
-            "name": "order",
-            "in": "query",
-            "enum": [
-              "asc",
-              "desc"
-            ],
-            "description": "Order feedbacks by ASC or DESC"
+            "name": "file_url",
+            "in": "formData",
+            "description": "File to upload"
           }
         ],
-        "operationId": "ApiWeb.FeedbackController.get_feedbacks",
-        "description": "All feedbacks can be viewed "
+        "operationId": "ApiWeb.FeedbackController.post_feedback",
+        "description": "User can submit a feedback along with  a file ",
+        "consumes": [
+          "multipart/form-data"
+        ]
       }
     },
     "/api/delete/{id}": {
@@ -394,7 +393,7 @@
   },
   "info": {
     "version": "0.0.1",
-    "title": "Inquora"
+    "title": "<enter your title>"
   },
   "host": "localhost:4000",
   "definitions": {
@@ -581,6 +580,41 @@
       "example": {
         "Name": "Tester"
       }
+    },
+    "filefeedbacksubmit": {
+      "type": "object",
+      "title": "Feedback Submission",
+      "required": [
+        "file_url",
+        "feedback",
+        "email",
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name"
+        },
+        "file_url": {
+          "type": "file",
+          "description": "The file to upload"
+        },
+        "feedback": {
+          "type": "string",
+          "description": "Feedback"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email"
+        }
+      },
+      "example": {
+        "name": "Tester",
+        "file_url": "final-image.jpg",
+        "feedback": "This is the feedback",
+        "email": "tester@gmail.com"
+      },
+      "description": "Schema of feedback submission by user along with a file upload"
     },
     "feedbackSubmit": {
       "type": "object",

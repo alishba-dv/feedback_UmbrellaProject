@@ -18,7 +18,7 @@ defmodule Data.Schema.Users do
    def changeset(user, attrs) do
 
      user
-     |> cast(attrs, [:fname,:lname, :feedback, :email,])
+     |> cast(attrs, [:fname,:lname, :feedback, :email])
      |> validate_required([:fname,:lname, :feedback, :email])
      |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must be a valid email")
 

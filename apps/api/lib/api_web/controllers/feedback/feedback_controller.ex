@@ -7,6 +7,7 @@ defmodule ApiWeb.FeedbackController do
  alias Data.Contexts.ViewFeedbacks
  alias Data.Contexts.DeleteFeedback
  alias Data.Contexts.UpdateFeedback
+ alias Data.Contexts.Feedback
 
   swagger_path :feedback_submit do
     post("/api/submit")
@@ -25,27 +26,50 @@ defmodule ApiWeb.FeedbackController do
     response 500, "Internal Server Error"
   end
 
-  swagger_path :get_feedbacks do
 
-    get("/api/feedbacks")
-    summary("View All feedbacks")
-    description("All feedbacks can be viewed ")
+  swagger_path :post_feedback do
+
+    post ("/api/feedback")
+    summary("Submit a feedback along with a file url for upload")
+    description("User can submit a feedback along with  a file ")
     produces "application/json"
+    consumes "multipart/form-data"
 
     parameters do
-      email :query, :string, "Filter feedbacks by this email", required: false
-      from :query, :string,  "Filter feedbacks from this date (YYYY-MM-DD)",required: false
-      to :query, :string,  "Filter feedbacks  till this date (YYYY-MM-DD)",required: false
-      order :query, :string, "Order feedbacks by ASC or DESC", required: false, enum: ["asc", "desc"]
+      name :formData, :string, "Name", required: true
+    email :formData, :string, "Email", required: true
+    feedback :formData, :string, "Feedback", required: true
+    file_url :formData, :file, "File to upload", required: false
+      end
+
+
+
+      response 200, "user Feedback Sbmitted successfully", Schema.ref(:filefeedbacksubmit)
+      response 400, "Error submitting feedback"
+      response 500, "Internal Server Error
+"
     end
 
-   response 200, "User feedbacks fetched successfully" , Schema.ref(:view_feedbacks)
-   response 400, "Error fetching feedbacks"
-   response 500, "Internal server error"
+  swagger_path :post_feedback do
+    post "/api/feedback"
+    summary "Submit feedback along with a file"
+    description "User can submit feedback and optionally upload a file"
+    produces "application/json"
+    consumes "multipart/form-data"
 
+    parameters do
+      name :formData, :string, "Name", required: true
+      email :formData, :string, "Email", required: true
+      feedback :formData, :string, "Feedback", required: true
+      file_url :formData, :file, "File to upload", required: true
     end
 
-    swagger_path :delete_feedback do
+    response 200, "Feedback submitted successfully", Schema.ref(:filefeedbacksubmit)
+    response 400, "Validation error"
+    response 500, "Internal server error"
+  end
+
+  swagger_path :delete_feedback do
 
       delete("/api/delete/{id}")
       summary("Deletes a feedback ")
@@ -106,6 +130,25 @@ end
           feedback: "This is the feedback"
         }
       end,
+filefeedbacksubmit: swagger_schema do
+  title("Feedback Submission")
+  description("Schema of feedback submission by user along with a file upload")
+
+  properties do
+    name :string, "Name", required: true
+    email :string, "Email", required: true
+    feedback :string, "Feedback", required: true
+    file_url :file, "The file to upload", required: true
+  end
+
+  example %{
+    name: "Tester",
+    email: "tester@gmail.com",
+    feedback: "This is the feedback",
+    file_url: "final-image.jpg"  # example file name
+  }
+end,
+
 
 
      view_feedbacks: swagger_schema do
@@ -212,6 +255,58 @@ end
   end
 
 
+  def post_feedback(conn, params) do
+
+#    extract path of file
+
+    upload=params["file_url"]
+    IO.puts("This is file URL from params: ")
+    IO.inspect(upload)
+
+#    apply a case on path if exist or not
+    file_url =
+      case upload do
+        %Plug.Upload{filename: filename, path: tmp_path} ->
+          dest = Path.join(["priv/static/uploads", filename])
+          File.mkdir_p!("priv/static/uploads") # ensure folder exists
+          File.cp!(tmp_path, dest)
+          "/uploads/#{filename}"
+
+        _ -> nil
+      end
+
+
+
+
+attrs=
+params
+ |>Map.drop(["file_url"])
+ |>Map.put("file_url", file_url )
+
+IO.puts("this is file url: ")
+IO.inspect(file_url)
+
+IO.puts("This is attrs: ")
+IO.inspect(attrs)
+
+    case Feedback.feedback( attrs) do
+      {:ok, feedback} ->
+        json(conn, "Inserted successfully")
+
+      {:error, changeset} ->
+        errors =
+          Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
+            Enum.reduce(opts, msg, fn {key, value}, acc ->
+              String.replace(acc, "%{#{key}}", to_string(value))
+            end)
+          end)
+
+        conn
+        |> put_status(400)
+        |> json(errors)
+    end
+  end
+
 
   def get_feedbacks(conn, params) do
     from = params["from"]
@@ -226,7 +321,7 @@ end
         d ->
           case Date.from_iso8601(d) do
             {:ok, from} -> from
-            {:error,reason} -> {:error, reason}
+            {:error,reason} -> conn|>put_status(400)|>json("Date format is invalid")
 
             _ -> nil   # or handle invalid date properly
           end
@@ -238,7 +333,7 @@ end
       d ->
         case Date.from_iso8601(d) do
           {:ok, to} ->to
-          {:error,reason} -> {:error, reason}
+          {:error,reason} -> {:error, "Date format is invalid"}
 
           _ -> nil   # or handle invalid date properly
         end

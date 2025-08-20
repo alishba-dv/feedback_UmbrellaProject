@@ -60,6 +60,7 @@ defmodule ApiWeb.Router do
     get "/feedbacks", FeedbackController, :get_feedbacks
     delete "/delete/{id}", FeedbackController, :delete_feedback
     patch "/update", FeedbackController, :update_feedback
+    post "/feedback", FeedbackController, :post_feedback
 
 
 
